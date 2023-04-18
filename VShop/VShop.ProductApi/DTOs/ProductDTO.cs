@@ -4,7 +4,7 @@ namespace VShop.ProductApi.DTOs;
 
 public class ProductDTO
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     [Required(ErrorMessage = "The name is required")]
     [MinLength(3)]
@@ -25,5 +25,5 @@ public class ProductDTO
     public string? ImageUrl { get; set; }
 
     public CategoryDTO? Category { get; set; }
-    public int CategoryId { get; set; }
+    //public int CategoryId { get; set; }
 }

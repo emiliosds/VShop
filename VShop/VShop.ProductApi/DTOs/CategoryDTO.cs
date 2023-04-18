@@ -4,7 +4,7 @@ namespace VShop.ProductApi.DTOs;
 
 public class CategoryDTO
 {
-    public int CategoryId { get; set; }
+    public Guid Id { get; set; }
 
     [Required(ErrorMessage = "The name is required")]
     [MinLength(3)]

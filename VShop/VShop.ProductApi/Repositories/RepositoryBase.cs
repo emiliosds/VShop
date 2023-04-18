@@ -5,12 +5,12 @@ using VShop.ProductApi.Models;
 
 namespace VShop.ProductApi.Repositories;
 
-public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
+public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : Entity
 {
-    private readonly DbSet<TEntity> _dbSet;
-    private readonly AppDbContext _context;
+    public readonly DbSet<TEntity> _dbSet;
+    public readonly AppDbContext _context;
 
-    protected Repository(AppDbContext context)
+    public RepositoryBase(AppDbContext context)
     {
         _dbSet = context.Set<TEntity>();
         _context = context;
@@ -31,11 +31,14 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     public async Task Delete(Guid id)
     {
         var entity = await GetById(id);
-        _dbSet.Remove(entity);
-        await _context.SaveChangesAsync();
+        if (entity is not null)
+        {
+            _dbSet.Remove(entity);
+            await _context.SaveChangesAsync();
+        }
     }
 
-    public async Task<TEntity> GetById(Guid id)
+    public async Task<TEntity?> GetById(Guid id)
     {
         return await _dbSet.FindAsync(id);
     }
@@ -44,7 +47,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     {
         var query = _dbSet.AsQueryable();
 
-        if(filter != null)
+        if (filter != null)
             query = query.Where(filter)
                 .AsNoTracking();
 

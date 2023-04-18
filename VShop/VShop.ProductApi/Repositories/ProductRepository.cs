@@ -2,7 +2,7 @@
 using VShop.ProductApi.Models;
 
 namespace VShop.ProductApi.Repositories;
-public class ProductRepository : Repository<Product>
+public class ProductRepository : RepositoryBase<Product>, IProductRepository
 {
-    protected ProductRepository(AppDbContext context) : base(context) { }
+    public ProductRepository(AppDbContext context) : base(context) { }
 }

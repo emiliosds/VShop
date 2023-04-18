@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VShop.ProductApi.Context;
 
@@ -10,9 +11,11 @@ using VShop.ProductApi.Context;
 namespace VShop.ProductApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230418162112_Inicial")]
+    partial class Inicial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,12 +40,12 @@ namespace VShop.ProductApi.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("52c3ef4f-57dd-467c-9f96-2789033df987"),
+                            Id = new Guid("e0c715ac-706c-4c7d-bcef-b4015df003d3"),
                             Name = "Material Escolar"
                         },
                         new
                         {
-                            Id = new Guid("a65eeae1-ea5e-4793-9873-c17ff1832791"),
+                            Id = new Guid("f4a28bc3-91c5-4dae-b2cb-16ca99486235"),
                             Name = "Acessórios"
                         });
                 });

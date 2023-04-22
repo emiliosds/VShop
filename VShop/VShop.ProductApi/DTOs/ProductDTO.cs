@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace VShop.ProductApi.DTOs;
 
@@ -22,8 +23,12 @@ public class ProductDTO
     [Required(ErrorMessage = "The stock is required")]
     [Range(1, 9999)]
     public long Stock { get; set; }
+
     public string? ImageUrl { get; set; }
 
+    public string? CategoryName { get; set; }
+
+    [JsonIgnore]
     public CategoryDTO? Category { get; set; }
-    //public int CategoryId { get; set; }
+    public Guid CategoryId { get; set; }
 }

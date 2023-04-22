@@ -9,5 +9,5 @@ public class Product : Entity
     public string? ImageUrl { get; set; }
 
     public Category? Category { get; set; }
-    //public int CategoryId { get; set; }
+    public Guid CategoryId { get; set; }
 }

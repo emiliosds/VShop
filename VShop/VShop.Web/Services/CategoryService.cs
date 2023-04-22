@@ -7,7 +7,7 @@ namespace VShop.Web.Services
 {
     public class CategoryService : ICategoryService
     {
-        private const string? API_ENDPOINT = "/api/products/";
+        private const string? API_ENDPOINT = "/api/categories/";
 
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly JsonSerializerOptions? _options;
@@ -23,8 +23,6 @@ namespace VShop.Web.Services
         public async Task<IEnumerable<CategoryViewModel>> GetAllCategories()
         {
             var client = _httpClientFactory.CreateClient("ProductApi");
-
-            IEnumerable<CategoryViewModel> categories;
 
             using (var response = await client.GetAsync(API_ENDPOINT))
                 if (response.IsSuccessStatusCode)

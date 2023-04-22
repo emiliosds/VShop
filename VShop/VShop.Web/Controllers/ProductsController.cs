@@ -47,7 +47,7 @@ namespace VShop.Web.Controllers
             }
             else
             {
-                ViewBag.CategoryId = new SelectList(await _categoryService.GetAllCategories(), "CategoryId", "Name");
+                ViewBag.CategoryId = new SelectList(await _categoryService.GetAllCategories(), "Id", "Name");
             }
             return View(model);
         }

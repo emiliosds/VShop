@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace VShop.Web.Models;
 
@@ -16,5 +17,7 @@ public class ProductViewModel
     [Required]
     public string? ImageUrl { get; set; }
     public string? CategoryName { get; set; }
+
+    [DisplayName("Category")]
     public Guid CategoryId { get; set; }
 }

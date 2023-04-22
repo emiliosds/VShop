@@ -18,6 +18,7 @@ public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : 
 
     public async Task Add(TEntity entity)
     {
+        entity.Id = Guid.NewGuid();
         await _dbSet.AddAsync(entity);
         await _context.SaveChangesAsync();
     }

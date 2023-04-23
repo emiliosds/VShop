@@ -5,12 +5,12 @@ using VShop.ProductApi.Models;
 
 namespace VShop.ProductApi.Repositories;
 
-public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : Entity
+public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : Entity
 {
-    public readonly DbSet<TEntity> _dbSet;
-    public readonly AppDbContext _context;
+    internal readonly DbSet<TEntity> _dbSet;
+    internal readonly AppDbContext _context;
 
-    public RepositoryBase(AppDbContext context)
+    protected RepositoryBase(AppDbContext context)
     {
         _dbSet = context.Set<TEntity>();
         _context = context;

@@ -21,7 +21,7 @@ namespace VShop.Web.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductViewModel>>> Index()
         {
-            var result = await _productService.GetAllProducts();
+            var result = await _productService.GetAll();
 
             if (result is null)
                 return View("Error");
@@ -32,7 +32,7 @@ namespace VShop.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateProduct()
         {
-            ViewBag.CategoryId = new SelectList(await _categoryService.GetAllCategories(), "Id", "Name");
+            ViewBag.CategoryId = new SelectList(await _categoryService.GetAll(), "Id", "Name");
             return View();
         }
 
@@ -41,15 +41,61 @@ namespace VShop.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _productService.CreateProduct(model);
+                var result = await _productService.Create(model);
                 if (result is not null)
                     return RedirectToAction(nameof(Index));
             }
             else
-            {
-                ViewBag.CategoryId = new SelectList(await _categoryService.GetAllCategories(), "Id", "Name");
-            }
+                ViewBag.CategoryId = new SelectList(await _categoryService.GetAll(), "Id", "Name");
+
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateProduct(Guid id)
+        {
+            ViewBag.CategoryId = new SelectList(await _categoryService.GetAll(), "Id", "Name");
+
+            var result = await _productService.GetById(id);
+            if (result is null)
+                return View("Error");
+
+            return View(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProduct(ProductViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _productService.Update(model);
+                if (result is not null)
+                    return RedirectToAction(nameof(Index));
+            }
+            else
+                ViewBag.CategoryId = new SelectList(await _categoryService.GetAll(), "Id", "Name");
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteProduct(Guid id)
+        {
+            var result = await _productService.GetById(id);
+            if (result is null)
+                return View("Error");
+
+            return View(result);
+        }
+
+        [HttpPost, ActionName("DeleteProduct")]
+        public async Task<IActionResult> DeleteConfirm(Guid id)
+        {
+            var result = await _productService.Delete(id);
+            if (!result)
+                return View("Error");
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

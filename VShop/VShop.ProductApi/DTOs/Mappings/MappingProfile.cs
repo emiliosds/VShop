@@ -12,6 +12,6 @@ public class MappingProfile : Profile
         CreateMap<ProductDTO, Product>();
 
         CreateMap<Product, ProductDTO>()
-            .ForMember(t => t.CategoryName, option => option.MapFrom(s => s.Category.Name));
+            .ForMember(t => t.CategoryName, option => option.MapFrom(s => s.Category != null ? s.Category.Name : null));
     }
 }

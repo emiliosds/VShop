@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using VShop.ProductApi.DTOs;
 using VShop.ProductApi.Services;
 
@@ -27,7 +26,7 @@ public class ProductsController : ControllerBase
         return Ok(categories);
     }
 
-    [HttpGet("{id:guid}", Name = "GetProduct")]
+    [HttpGet("{id}", Name = "GetProduct")]
     public async Task<ActionResult<ProductDTO>> Get(Guid id)
     {
         var productDTO = await _productService.GetProductById(id);
@@ -49,27 +48,26 @@ public class ProductsController : ControllerBase
         return new CreatedAtRouteResult("GetProduct", new { id = productDTO.Id }, productDTO);
     }
 
-    [HttpPut("id:guid")]
-    public async Task<ActionResult> Put(Guid id, [FromBody] ProductDTO productDTO)
+    [HttpPut]
+    public async Task<ActionResult> Put([FromBody] ProductDTO productDTO)
     {
-        if (id != productDTO.Id)
-            return BadRequest();
-
         if (productDTO is null)
             return BadRequest();
 
         await _productService.UpdateProduct(productDTO);
+
         return Ok(productDTO);
     }
 
-    [HttpDelete("id:guid")]
+    [HttpDelete("{id}")]
     public async Task<ActionResult<ProductDTO>> Delete(Guid id)
     {
         var productDTO = await _productService.GetProductById(id);
         if (productDTO is null)
             return NotFound("Product not found");
 
-        await _productService.RemoveProduct(productDTO.Id);
+        await _productService.RemoveProduct(id);
+
         return Ok(productDTO);
     }
 }

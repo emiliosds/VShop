@@ -1,7 +1,6 @@
 ﻿namespace VShop.Web.Models;
 
-public class CategoryViewModel
+public class CategoryViewModel : ViewModelBase
 {
-    public Guid Id { get; set; }
     public string? Name { get; set; }
 }

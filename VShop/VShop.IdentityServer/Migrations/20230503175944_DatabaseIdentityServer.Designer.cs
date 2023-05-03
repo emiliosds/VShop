@@ -11,7 +11,7 @@ using VShop.IdentityServer.Data;
 namespace VShop.IdentityServer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230428181438_DatabaseIdentityServer")]
+    [Migration("20230503175944_DatabaseIdentityServer")]
     partial class DatabaseIdentityServer
     {
         /// <inheritdoc />

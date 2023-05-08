@@ -1,11 +1,13 @@
-﻿using System.Text.Json;
+﻿using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.Json;
 using VShop.Web.Models;
 
 namespace VShop.Web.Services;
 
 public abstract class ServiceBase<TViewModel> : IServiceBase<TViewModel> where TViewModel : ViewModelBase
 {
-    internal readonly HttpClient _client;
+    internal readonly IHttpClientFactory _httpClientFactory;
     internal readonly string? _endPoint;
     internal readonly JsonSerializerOptions? _options;
 
@@ -16,12 +18,13 @@ public abstract class ServiceBase<TViewModel> : IServiceBase<TViewModel> where T
     {
         _endPoint = endPoint;
         _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        _client = httpClientFactory.CreateClient("ProductApi");
+        _httpClientFactory = httpClientFactory;
     }
 
-    public async Task<TViewModel?> Create(TViewModel model)
+    public async Task<TViewModel?> Create(TViewModel model, string token)
     {
-        using (var response = await _client.PostAsJsonAsync(_endPoint, model))
+        var client = CreateHttpClient(token);
+        using (var response = await client.PostAsJsonAsync(_endPoint, model))
             if (response.IsSuccessStatusCode)
             {
                 var apiResponse = await response.Content.ReadAsStreamAsync();
@@ -33,9 +36,10 @@ public abstract class ServiceBase<TViewModel> : IServiceBase<TViewModel> where T
         return _object;
     }
 
-    public async Task<TViewModel?> Update(TViewModel model)
+    public async Task<TViewModel?> Update(TViewModel model, string token)
     {
-        using (var response = await _client.PutAsJsonAsync(_endPoint, model))
+        var client = CreateHttpClient(token);
+        using (var response = await client.PutAsJsonAsync(_endPoint, model))
             if (response.IsSuccessStatusCode)
             {
                 var apiResponse = await response.Content.ReadAsStreamAsync();
@@ -47,18 +51,20 @@ public abstract class ServiceBase<TViewModel> : IServiceBase<TViewModel> where T
         return _object;
     }
 
-    public async Task<bool> Delete(Guid id)
+    public async Task<bool> Delete(Guid id, string token)
     {
-        using var response = await _client.DeleteAsync(_endPoint + id);
+        var client = CreateHttpClient(token);
+        using var response = await client.DeleteAsync(_endPoint + id);
         if (response.IsSuccessStatusCode)
             return true;
 
         return false;
     }
 
-    public async Task<TViewModel?> GetById(Guid id)
+    public async Task<TViewModel?> GetById(Guid id, string token)
     {
-        using (var response = await _client.GetAsync(_endPoint + id))
+        var client = CreateHttpClient(token);
+        using (var response = await client.GetAsync(_endPoint + id))
             if (response.IsSuccessStatusCode)
             {
                 var apiResponse = await response.Content.ReadAsStreamAsync();
@@ -70,9 +76,10 @@ public abstract class ServiceBase<TViewModel> : IServiceBase<TViewModel> where T
         return _object;
     }
 
-    public async Task<IEnumerable<TViewModel?>?> GetAll()
+    public async Task<IEnumerable<TViewModel?>?> GetAll(string token)
     {
-        using (var response = await _client.GetAsync(_endPoint))
+        var client = CreateHttpClient(token);
+        using (var response = await client.GetAsync(_endPoint))
             if (response.IsSuccessStatusCode)
             {
                 var apiResponse = await response.Content.ReadAsStreamAsync();
@@ -82,5 +89,12 @@ public abstract class ServiceBase<TViewModel> : IServiceBase<TViewModel> where T
                 return null;
 
         return _list;
+    }
+
+    private HttpClient CreateHttpClient(string token)
+    {
+        var client = _httpClientFactory.CreateClient("ProductApi");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        return client;
     }
 }
